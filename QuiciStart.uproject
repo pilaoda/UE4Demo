@@ -1,0 +1,16 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{DB21074C-40CC-20DE-B038-1DADB94759CF}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "QuiciStart",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		}
+	]
+}

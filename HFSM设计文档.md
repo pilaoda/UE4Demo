@@ -84,7 +84,7 @@ void UStateManager::Stand() {
 	H1_State = GetStateObject(StateName);
 }
 ```
- - 需要对特殊的无法到达的状态组合进行判断，并标记三个级别替换状态为应该替换的状态组合。例如趴地+移动+开瞄准镜的组合应被替换为趴地+移动+关瞄准镜，来满足相应的游戏表现需求。同时原来记录的三个状态级别变量应保持不变，来保证该状态切换时仍能保留其进入之前的信息，例如趴地移动开镜时应关镜，但停止移动后需要重新自己开镜。
+ - 需要对特殊的无法到达的状态组合进行判断，并标记三个级别替换状态为应该替换的状态组合。例如趴地+移动+开瞄准镜的组合应被替换为趴地+移动+关瞄准镜，来满足相应的游戏表现需求。同时原来记录的三个状态级别变量应保持不变，来保证该状态切换时仍能保留其进入之前的信息，例如趴地移动开镜时应该关镜，但停止移动后需要重新自动开镜。
 ```
 // Called every frame
 void UStateManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -118,3 +118,4 @@ void UStateManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	}
 }
 ```
+![状态替换](StateReplace.png)

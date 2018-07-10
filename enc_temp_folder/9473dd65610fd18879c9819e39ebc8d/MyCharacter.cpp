@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MyCharacter.h"
-
+#include "Components/InputComponent.h"
+#include "GameFramework/PlayerController.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -40,8 +41,6 @@ void AMyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	StateManager->Stand();
-	StateManager->Halt();
-	StateManager->Close();
 }
 
 // Called every frame
@@ -55,7 +54,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	}
 	else
 	{
-		StateManager->Halt();
+// 		StateManager->Halt();
 	}
 }
 
@@ -72,6 +71,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindTouch(IE_Released, this, &AMyCharacter::TouchEnd);
 	PlayerInputComponent->BindTouch(IE_Repeat, this, &AMyCharacter::Touching);
 
+	PlayerInputComponent->BindAction("Sight", IE_Pressed, this, &AMyCharacter::GunADS);
+	PlayerInputComponent->BindAction("PressX", IE_Pressed, this, &AMyCharacter::PressX);
+	PlayerInputComponent->BindAction("PressC", IE_Pressed, this, &AMyCharacter::PressC);
 }
 
 void AMyCharacter::Move_XAxis(float value)
@@ -134,4 +136,41 @@ void AMyCharacter::TouchStart(ETouchIndex::Type FingerIndex, FVector Location)
 void AMyCharacter::TouchEnd(ETouchIndex::Type FingerIndex, FVector Location)
 {
 	bTouchStart = false;
+}
+
+void AMyCharacter::GunADS()
+{
+
+// 	if (StateManager->H3->StateName == "GunADS")
+// 	{
+// 		StateManager->Close();
+// 	}
+// 	else
+// 	{
+// 		StateManager->GunADS();
+// 	}
+}
+
+void AMyCharacter::PressX()
+{
+// 	if (StateManager->H1->StateName == "Prone")
+// 	{
+// 		StateManager->Stand();
+// 	}
+// 	else
+// 	{
+// 		StateManager->Prone();
+// 	}
+}
+
+void AMyCharacter::PressC()
+{
+// 	if (StateManager->H1->StateName == "Crouch")
+// 	{
+// 		StateManager->Stand();
+// 	}
+// 	else
+// 	{
+// 		StateManager->Crouch();
+// 	}
 }

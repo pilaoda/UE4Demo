@@ -4,9 +4,9 @@
 
 UCrouchState::UCrouchState()
 {
-	StateName = FString("crouch_state");
+	StateName = FString("Crouch");
 
-
+	StateType = StateEnum::CROUCH;
 }
 
 

@@ -4,19 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "BaseState.h"
-#include "CloseState.generated.h"
+#include "ProneState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class QUICISTART_API UCloseState : public UBaseState
+class QUICISTART_API UProneState : public UBaseState
 {
 	GENERATED_BODY()
 	
 public:
 	// Sets default values for this component's properties
-	UCloseState();
-	
-	
+	UProneState();
+
 };

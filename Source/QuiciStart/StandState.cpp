@@ -4,8 +4,9 @@
 
 UStandState::UStandState()
 {
-	StateName = FString("stand_state");
+	StateName = FString("Stand");
 
+	StateType = StateEnum::STAND;
 }
 
 

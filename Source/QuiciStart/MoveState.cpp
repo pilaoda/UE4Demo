@@ -5,8 +5,9 @@
 
 UMoveState::UMoveState()
 {
-	StateName = FString("move_state");
+	StateName = FString("Move");
 
+	StateType = StateEnum::MOVE;
 }
 
 

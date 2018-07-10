@@ -34,21 +34,6 @@ UStateManager::UStateManager()
 	GunFireState = NewObject<UGunFireState>();
 	GunADSState = NewObject<UGunADSState>();
 
-	TArray<TMap<FString, FString>> ProneArray;
-
-	TMap<FString, FString> m1;
-	m1.Add("from", FString::FromInt((int)StateEnum::MOVE));
-	m1.Add("to", FString::FromInt((int)StateEnum::GUN_ADS));
-	m1.Add("relation", "_Y");
-	ProneArray.Add(m1);
-
-	TMap<FString, FString> m2;
-	m2.Add("from", FString::FromInt((int)StateEnum::GUN_ADS));
-	m2.Add("to", FString::FromInt((int)StateEnum::MOVE));
-	m2.Add("relation", "_Y");
-	ProneArray.Add(m2);
-
-	Conditions.Add(StateEnum::PRONE, ProneArray);
 }
 
 
@@ -91,84 +76,36 @@ void UStateManager::AddState(StateEnum AddStateType)
 		UBaseState* state = GetStateObject(AddStateType);
 		CurrentStates.Add(state);
 		state->Enter();
-		ShowCurrentStates();
 	}
-
-	if (CurrentStates.Find(GetStateObject(AddStateType)))
+	else
 	{
-		return;
-	}
-
-	// check conditions
-	for (auto& Elem : Conditions)
-	{
-		if (CurrentStates.Find(GetStateObject(Elem.Key)))
+		TArray<StateEnum> ToBeRemoved;
+		for (auto& State : CurrentStates)
 		{
-			TArray<TMap<FString, FString>> array = Elem.Value;
-			for (auto& r : array) {
-				StateEnum from = (StateEnum)FCString::Atoi(*r["from"]);
-				StateEnum to = (StateEnum)FCString::Atoi(*r["to"]);
-				FString s = r["relation"];
-				if (CurrentStates.Find(GetStateObject(from)))
-				{
-					if (AddStateType == to)
-					{
-						if (!HasX(s))
-						{
-							RemoveState(from);
-						}
-						if (HasY(s))
-						{
-							UBaseState* state = GetStateObject(to);
-							CurrentStates.Add(state);
-							state->Enter();
-						}
-						ShowCurrentStates();
-						return;
-					}
-				}
+			FString s = StateTable[(int)State->StateType][(int)AddStateType];
+			if (!HasX(s))
+			{
+				ToBeRemoved.Add(State->StateType);
+			}
+			if (HasY(s))
+			{
+				UBaseState* state = GetStateObject(AddStateType);
+				CurrentStates.Add(state);
+				state->Enter();
 			}
 		}
-	}
-
-
-	TArray<StateEnum> ToBeRemoved;
-	bool NeedAdd = false;
-	for (auto& State : CurrentStates)
-	{
-		FString s = StateTable[(int)State->StateType][(int)AddStateType];
-		if (!HasX(s))
+		for (auto& StateType : ToBeRemoved)
 		{
-			ToBeRemoved.Add(State->StateType);
-		}
-		if (HasY(s))
-		{
-			NeedAdd = true;
+			RemoveState(StateType);
 		}
 	}
-	for (auto& StateType : ToBeRemoved)
-	{
-		RemoveState(StateType);
-	}
-	if (NeedAdd)
-	{
-		UBaseState* state = GetStateObject(AddStateType);
-		CurrentStates.Add(state);
-		state->Enter();
-	}
-	ShowCurrentStates();
-
 }
 
 void UStateManager::RemoveState(StateEnum StateType)
 {
 	UBaseState* state = GetStateObject(StateType);
-	if (CurrentStates.Find(state))
-	{
-		CurrentStates.Remove(state);
-		state->Leave();
-		ShowCurrentStates();
-	}
+	CurrentStates.Remove(state);
+	state->Leave();
 }
 
 UBaseState* UStateManager::GetStateObject(StateEnum StateType)
@@ -214,10 +151,6 @@ void UStateManager::Move() {
 	AddState(StateEnum::MOVE);
 }
 
-void UStateManager::StopMove() {
-	RemoveState(StateEnum::MOVE);
-}
-
 void UStateManager::Stand() {
 	AddState(StateEnum::STAND);
 }
@@ -253,31 +186,9 @@ void UStateManager::Jump() {
 }
 
 void UStateManager::GunADS() {
-	UBaseState** PState = CurrentStates.Find(GunADSState);
-	if (PState != nullptr)
-	{
-		RemoveState(StateEnum::GUN_ADS);
-	}
-	else
-	{
-		AddState(StateEnum::GUN_ADS);
-	}
+	AddState(StateEnum::GUN_ADS);
 }
 
 void UStateManager::GunFire() {
 	AddState(StateEnum::GUN_FIRE);
-}
-
-
-void UStateManager::StopGunFire() {
-	RemoveState(StateEnum::GUN_FIRE);
-}
-
-void UStateManager::ShowCurrentStates() {
-	FString msg = "";
-	for (auto& State : CurrentStates)
-	{
-		msg += State->StateName + " ";
-	}
-	UE_LOG(LogTemp, Warning, TEXT("Current States: %s"), *msg);
 }

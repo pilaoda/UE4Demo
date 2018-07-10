@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "BaseState.h"
-#include "OpenState.generated.h"
+#include "GunFireState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class QUICISTART_API UOpenState : public UBaseState
+class QUICISTART_API UGunFireState : public UBaseState
 {
 	GENERATED_BODY()
 	
 public:
 	// Sets default values for this component's properties
-	UOpenState();
+	UGunFireState();
 	
 	
 };

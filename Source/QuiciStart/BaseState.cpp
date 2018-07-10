@@ -10,7 +10,8 @@ UBaseState::UBaseState()
 	// off to improve performance if you don't need them.
 	// 	PrimaryComponentTick.bCanEverTick = true;
 
-	StateName = FString("base_state");
+	StateName = FString("base");
+	StateType = (StateEnum)-1;
 }
 
 
@@ -19,7 +20,7 @@ void UBaseState::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("%s begin play"), *StateName);
+// 	UE_LOG(LogTemp, Warning, TEXT("%s begin play"), *StateName);
 }
 
 
@@ -28,6 +29,16 @@ void UBaseState::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	UE_LOG(LogTemp, Warning, TEXT("%s tick"), *StateName);
+// 	UE_LOG(LogTemp, Warning, TEXT("%s tick"), *StateName);
+}
+
+void UBaseState::Enter()
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s Enter"), *StateName);
+}
+
+void UBaseState::Leave()
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s Leave"), *StateName);
 }
 

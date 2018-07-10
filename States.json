@@ -1,0 +1,9 @@
+{
+    "Move": {"Move":"XY", "Stand":"XY", "Crouch":"XY", "Prone":"XY", "Jump":"XY", "GunFire":"XY", "GunADS":"XY"},
+    "Stand": {"Move":"XY", "Stand":"XY", "Crouch":"_Y", "Prone":"_Y", "Jump":"XY", "GunFire":"XY", "GunADS":"XY"},
+    "Crouch": {"Move":"XY", "Stand":"_Y", "Crouch":"X_", "Prone":"_Y", "Jump":"XY", "GunFire":"XY", "GunADS":"XY"},
+    "Prone": {"Move":"XY", "Stand":"_Y", "Crouch":"_Y", "Prone":"XY", "Jump":"XY", "GunFire":"XY", "GunADS":"XY"},
+    "Jump": {"Move":"XY", "Stand":"XY", "Crouch":"X_", "Prone":"X_", "Jump":"XY", "GunFire":"XY", "GunADS":"X_"},
+    "GunFire": {"Move":"XY", "Stand":"XY", "Crouch":"XY", "Prone":"XY", "Jump":"XY", "GunFire":"XY", "GunADS":"X_"},
+    "GunADS": {"Move":"XY", "Stand":"XY", "Crouch":"XY", "Prone":"XY", "Jump":"_Y", "GunFire":"XY", "GunADS":"XY"}
+}

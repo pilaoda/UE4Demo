@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "BaseState.h"
-#include "CreepState.generated.h"
+#include "GunADSState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class QUICISTART_API UCreepState : public UBaseState
+class QUICISTART_API UGunADSState : public UBaseState
 {
 	GENERATED_BODY()
 	
 public:
 	// Sets default values for this component's properties
-	UCreepState();
+	UGunADSState();
 	
 	
 };

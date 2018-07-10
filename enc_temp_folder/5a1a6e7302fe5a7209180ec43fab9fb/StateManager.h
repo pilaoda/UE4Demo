@@ -32,16 +32,12 @@ public:
 	UBaseState* GetStateObject(StateEnum StateType);
 
 	void Move();
-	void StopMove();
 	void Stand();
 	void Crouch();
 	void Prone();
 	void Jump();
 	void GunADS();
 	void GunFire();
-	void StopGunFire();
-
-	void ShowCurrentStates();
 
 	bool HasX(FString s);
 	bool HasY(FString s);
@@ -75,5 +71,5 @@ public:
 			{ "XY", "XY", "XY", "XY", "_Y", "XY", "XY" }
 	};
 
-	TMap<StateEnum, TArray<TMap<FString, FString>>> Conditions;
+
 };

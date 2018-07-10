@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "BaseState.h"
-#include "HaltState.generated.h"
+#include "JumpState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class QUICISTART_API UHaltState : public UBaseState
+class QUICISTART_API UJumpState : public UBaseState
 {
 	GENERATED_BODY()
 	
 public:
 	// Sets default values for this component's properties
-	UHaltState();
+	UJumpState();
 	
 	
 };

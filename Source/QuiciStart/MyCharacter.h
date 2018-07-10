@@ -6,8 +6,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include "GameFramework/Actor.h"
 #include "StateManager.h"
+
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -36,7 +36,7 @@ public:
 	void TouchStart(ETouchIndex::Type FingerIndex, FVector Location);
 	void TouchEnd(ETouchIndex::Type FingerIndex, FVector Location);
 	void Touching(ETouchIndex::Type FingerIndex, FVector Location);
-	void Sight();
+	void GunADS();
 	void PressX();
 	void PressC();
 

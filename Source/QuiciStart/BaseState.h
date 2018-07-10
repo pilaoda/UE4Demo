@@ -6,6 +6,17 @@
 #include "Components/ActorComponent.h"
 #include "BaseState.generated.h"
 
+UENUM(BlueprintType)
+enum class StateEnum : uint8
+{
+	MOVE = 0,
+	STAND = 1,
+	CROUCH = 2,
+	PRONE = 3,
+	JUMP = 4,
+	GUN_FIRE = 5,
+	GUN_ADS = 6
+};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class QUICISTART_API UBaseState : public UActorComponent
@@ -24,6 +35,10 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void Enter();
+	virtual void Leave();
+
 		
 	FString StateName;
+	StateEnum StateType;
 };

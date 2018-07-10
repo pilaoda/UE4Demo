@@ -15,107 +15,118 @@ UStateManager* StateManager;
 
 ## 2. BaseState
 
- - BaseState类是所有状态的基类，继承于UActorComponent，拥有并重载了其BeginPlay()及TickComponent()方法。
-```
-// Called when the game starts
-void UBaseState::BeginPlay()
-{
-	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("%s begin play"), *StateName);
-}
-
-
-// Called every frame
-void UBaseState::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	UE_LOG(LogTemp, Warning, TEXT("%s tick"), *StateName);
-}
-```
- - 同时还维护了一个成员变量用来记录状态名
+ - BaseState类是所有状态的基类，继承于UActorComponent，拥有并重载了其BeginPlay()及TickComponent()方法，实现了Enter()和Leave()方法。
+ - 同时还维护了一个成员变量用来记录状态名，一个用来记录状态枚举类
 ```
 FString StateName;
+StateEnum StateType;
 ```
 
 ## 3. 继承自BaseState的子状态
- - 所有状态都继承BaseState，并在自己的构造函数中对状态名进行定义。
+ - 所有状态都继承BaseState，并在自己的构造函数中对状态名和枚举变量进行定义。
 ```
 UStandState::UStandState()
 {
-	StateName = FString("stand_state");
+	StateName = FString("Stand");
 
+	StateType = StateEnum::STAND;
 }
 ```
- - 目前一共有Stand，Crouch，Creep，Move，Halt，Open，Close七种状态类
-    - 其中Stand，Crouch，Creep属于一级状态，表示人物当前的姿势。
-    - Move，Halt属于二级状态，表示人物当前是否在移动。
-    - Open，Close属于三级状态，表示人物当前是否开启了瞄准镜。
- - 要表示一个人物完整的状态需要三个级别的状态共同组成
+ - 目前一共有Stand，Crouch，Prone，Move，GunADS五种状态类
+
 
 ## 4. StateManager
  - StateManager负责管理角色所有状态之间的切换，是character的成员变量。
- - StateManager一共有六个状态的变量，包括当前三个级别的状态以及为了解决一些状态组合无法存在和声明的三个替换状态。
+ - StateManager含有TSet成员变量记录当前的所有状态，并维护了一个常量状态互斥表StateTable，以及一个特殊条件表Conditions。
  - 实践时我注意到，要为想动态维护的变量加上UPROPERTY()，这些UBaseState对象才会被添加进UE4的GC系统引用中，否则将被创建于栈中而不被GC计数管理，指针随时可能失效。
 ```
-        UPROPERTY()
-            UBaseState* H1_State;
-        UPROPERTY()
-            UBaseState* H2_State;
-        UPROPERTY()
-            UBaseState* H3_State;
+	UPROPERTY()
+		TSet<UBaseState*> CurrentStates;
 
-        UPROPERTY()
-            UBaseState* H1_Replace_State;
-        UPROPERTY()
-            UBaseState* H2_Replace_State;
-        UPROPERTY()
-            UBaseState* H3_Replace_State;
+	// 	MOVE, STAND, CROUCH, PRONE, JUMP, GUN_FIRE, GUN_ADS
+	const FString StateTable[7][7] = {
+			{ "XY", "XY", "XY", "XY", "XY", "XY", "XY" },
+			{ "XY", "XY", "_Y", "_Y", "XY", "XY", "XY" },
+			{ "XY", "_Y", "X_", "_Y", "XY", "XY", "XY" },
+			{ "XY", "_Y", "_Y", "XY", "XY", "XY", "XY" },
+			{ "XY", "XY", "X_", "X_", "XY", "XY", "X_" },
+			{ "XY", "XY", "XY", "XY", "XY", "XY", "X_" },
+			{ "XY", "XY", "XY", "XY", "_Y", "XY", "XY" }
+	};
+
+	TMap<StateEnum, TArray<TMap<FString, FString>>> Conditions;
 ```        
- - GetStateObject方法是根据状态名创建新状态对象的方法。
+ - AddState方法是根据枚举变量添加状态的方法。
+	- 需要先检查是否已经存在该状态，以及当前状态是否为空等
+	- 接着根据特殊条件Conditions进行检查判断，对特殊情况进行操作。
 ```
-UBaseState* GetStateObject(FString StateName);
+	// check conditions
+	for (auto& Elem : Conditions)
+	{
+		if (CurrentStates.Find(GetStateObject(Elem.Key)))
+		{
+			TArray<TMap<FString, FString>> array = Elem.Value;
+			for (auto& r : array) {
+				StateEnum from = (StateEnum)FCString::Atoi(*r["from"]);
+				StateEnum to = (StateEnum)FCString::Atoi(*r["to"]);
+				FString s = r["relation"];
+				if (CurrentStates.Find(GetStateObject(from)))
+				{
+					if (AddStateType == to)
+					{
+						if (!HasX(s))
+						{
+							RemoveState(from);
+						}
+						if (HasY(s))
+						{
+							UBaseState* state = GetStateObject(to);
+							CurrentStates.Add(state);
+							state->Enter();
+						}
+						ShowCurrentStates();
+						return;
+					}
+				}
+			}
+		}
+	}
 ```
- - 切换状态时将调用类似以下方法创建新状态对象，来替换对应级别的状态对象。
+ - 
+	- 接着根据互斥表处理通常情况
+	- 这里注意不能在变量一个容器的过程中对其进行增删操作，否则会引起容器长度改变的异常。正确的方法是用另一个容器或变量进行标记，遍历完后再进行处理。
 ```
-void UStateManager::Stand() {
-	FString StateName = "stand_state";
-	H1_State = GetStateObject(StateName);
-}
+	TArray<StateEnum> ToBeRemoved;
+	bool NeedAdd = false;
+	for (auto& State : CurrentStates)
+	{
+		FString s = StateTable[(int)State->StateType][(int)AddStateType];
+		if (!HasX(s))
+		{
+			ToBeRemoved.Add(State->StateType);
+		}
+		if (HasY(s))
+		{
+			NeedAdd = true;
+		}
+	}
+	for (auto& StateType : ToBeRemoved)
+	{
+		RemoveState(StateType);
+	}
+	if (NeedAdd)
+	{
+		UBaseState* state = GetStateObject(AddStateType);
+		CurrentStates.Add(state);
+		state->Enter();
+	}
+	ShowCurrentStates();
 ```
- - 需要对特殊的无法到达的状态组合进行判断，并标记三个级别替换状态为应该替换的状态组合。例如趴地+移动+开瞄准镜的组合应被替换为趴地+移动+关瞄准镜，来满足相应的游戏表现需求。同时原来记录的三个状态级别变量应保持不变，来保证该状态切换时仍能保留其进入之前的信息，例如趴地移动开镜时应该关镜，但停止移动后需要重新自动开镜。
-```
-// Called every frame
-void UStateManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	bool bReplaced = false;
 
-	if (H1_State->StateName == "creep_state" && H2_State->StateName == "move_state"  && H3_State->StateName == "open_state")
-	{
-		H1_Replace_State = H1_State;
-		H2_Replace_State = H2_State;
-		H3_Replace_State = NewObject<UCloseState>();
-		bReplaced = true;
-	}
-	else
-	{
-		H1_Replace_State = nullptr;
-		H2_Replace_State = nullptr;
-		H3_Replace_State = nullptr;
-		bReplaced = false;
-	}
-
-	if (bReplaced)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Current State Replaced: { H1:%s, H2:%s, H3:%s }"), *H1_Replace_State->StateName, *H2_Replace_State->StateName, *H3_Replace_State->StateName);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Current State: { H1:%s, H2:%s, H3:%s }"), *H1_State->StateName, *H2_State->StateName, *H3_State->StateName);
-	}
-}
-```
+ - 特殊状态(伏地开镜状态下添加移动状态时，必须删除开镜状态) 成功地进行了处理。
 ![状态替换](StateReplace.png)
+
+## 遗留问题
+ - 伏地开镜移动后，在停止移动时无法恢复到开镜的状态。
+ - 特殊状态表在c++下书写十分困难，在json或lua中情况会好转。

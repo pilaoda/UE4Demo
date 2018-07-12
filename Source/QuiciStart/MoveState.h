@@ -16,7 +16,6 @@ class QUICISTART_API UMoveState : public UBaseState
 	
 public:
 	// Sets default values for this component's properties
-	UMoveState();
-	
-	
+	UMoveState();	
+
 };

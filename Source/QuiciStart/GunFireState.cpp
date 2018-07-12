@@ -2,11 +2,8 @@
 
 #include "GunFireState.h"
 
-
 UGunFireState::UGunFireState()
 {
 	StateName = FString("GunFire");
-
 	StateType = StateEnum::GUN_FIRE;
 }
-

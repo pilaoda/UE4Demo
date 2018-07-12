@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BaseState.h"
-
+#include "MyCharacter.h"
 
 // Sets default values for this component's properties
 UBaseState::UBaseState()
@@ -42,3 +42,7 @@ void UBaseState::Leave()
 	UE_LOG(LogTemp, Warning, TEXT("%s Leave"), *StateName);
 }
 
+void UBaseState::SetCharacter(AMyCharacter* Character)
+{
+	this->Character = Character;
+}

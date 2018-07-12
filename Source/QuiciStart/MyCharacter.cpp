@@ -3,6 +3,7 @@
 #include "MyCharacter.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/SkeletalMeshComponent.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -33,6 +34,11 @@ AMyCharacter::AMyCharacter()
 	OurCamera->bUsePawnControlRotation = false;
 
 	StateManager = CreateDefaultSubobject<UStateManager>(TEXT("StateManager"));
+	StateManager->SetCharacter(this);
+
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -86.0f), FRotator(0.0f, 0.0f, -90.0f));
+
+	bIsProned = false;
 }
 
 // Called when the game starts or when spawned
@@ -56,6 +62,11 @@ void AMyCharacter::Tick(float DeltaTime)
 	{
 		StateManager->StopMove();
 	}
+
+	if (!bWasJumping)
+	{
+		StateManager->StopJump();
+	}
 }
 
 // Called to bind functionality to input
@@ -74,6 +85,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Sight", IE_Pressed, this, &AMyCharacter::GunADS);
 	PlayerInputComponent->BindAction("PressX", IE_Pressed, this, &AMyCharacter::PressX);
 	PlayerInputComponent->BindAction("PressC", IE_Pressed, this, &AMyCharacter::PressC);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::JumpStart);
 }
 
 void AMyCharacter::Move_XAxis(float value)
@@ -143,12 +156,41 @@ void AMyCharacter::GunADS()
 	StateManager->GunADS();
 }
 
-void AMyCharacter::PressX()
-{
-	StateManager->Prone();
-}
-
 void AMyCharacter::PressC()
 {
-	StateManager->Crouch();
+	if (bIsCrouched)
+	{
+		StateManager->StopCrouch();
+	}
+	else
+	{	
+		StateManager->Crouch();
+	}
+}
+
+void AMyCharacter::JumpStart()
+{
+	StateManager->Jump();
+}
+
+void AMyCharacter::PressX()
+{
+	if (StateManager->IsProne())
+	{
+		StateManager->StopProne();
+	}
+	else
+	{
+		StateManager->Prone();
+	}
+}
+
+void AMyCharacter::Prone() 
+{
+	bIsProned = true;
+}
+
+void AMyCharacter::UnProne()
+{
+	bIsProned = false;
 }

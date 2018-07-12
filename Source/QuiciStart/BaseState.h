@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "BaseState.generated.h"
+class AMyCharacter;
 
 UENUM(BlueprintType)
 enum class StateEnum : uint8
@@ -38,7 +39,10 @@ public:
 	virtual void Enter();
 	virtual void Leave();
 
+	virtual void SetCharacter(AMyCharacter * Character);
+
 		
 	FString StateName;
 	StateEnum StateType;
+	AMyCharacter* Character;
 };

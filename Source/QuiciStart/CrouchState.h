@@ -18,4 +18,7 @@ public:
 	// Sets default values for this component's properties
 	UCrouchState();
 
-};
+	virtual void Enter() override;
+	virtual void Leave() override;
+
+ };

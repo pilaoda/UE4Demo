@@ -2,12 +2,8 @@
 
 #include "GunADSState.h"
 
-
 UGunADSState::UGunADSState()
 {
 	StateName = FString("GunADS");
-
 	StateType = StateEnum::GUN_ADS;
 }
-
-

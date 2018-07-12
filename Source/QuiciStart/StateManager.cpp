@@ -209,6 +209,17 @@ UBaseState* UStateManager::GetStateObject(StateEnum StateType)
 
 }
 
+void UStateManager::SetCharacter(AMyCharacter * Character)
+{
+	MoveState->SetCharacter(Character);
+	StandState->SetCharacter(Character);
+	CrouchState->SetCharacter(Character);
+	ProneState->SetCharacter(Character);
+	JumpState->SetCharacter(Character);
+	GunFireState->SetCharacter(Character);
+	GunADSState->SetCharacter(Character);
+}
+
 
 void UStateManager::Move() {
 	AddState(StateEnum::MOVE);
@@ -223,33 +234,27 @@ void UStateManager::Stand() {
 }
 
 void UStateManager::Crouch() {
-	UBaseState** PState = CurrentStates.Find(CrouchState);
-	if (PState != nullptr)
-	{
-		RemoveState(StateEnum::CROUCH);
-		AddState(StateEnum::STAND);
-	}
-	else
-	{
-		AddState(StateEnum::CROUCH);
-	}
+	AddState(StateEnum::CROUCH);
+}
+
+void UStateManager::StopCrouch() {
+	RemoveState(StateEnum::CROUCH);
 }
 
 void UStateManager::Prone() {
-	UBaseState** PState = CurrentStates.Find(ProneState);
-	if (PState != nullptr)
-	{
-		RemoveState(StateEnum::PRONE);
-		AddState(StateEnum::STAND);
-	}
-	else
-	{
-		AddState(StateEnum::PRONE);
-	}
+	AddState(StateEnum::PRONE);
+}
+
+void UStateManager::StopProne() {
+	RemoveState(StateEnum::PRONE);
 }
 
 void UStateManager::Jump() {
 	AddState(StateEnum::JUMP);
+}
+
+void UStateManager::StopJump() {
+	RemoveState(StateEnum::JUMP);
 }
 
 void UStateManager::GunADS() {
@@ -280,4 +285,9 @@ void UStateManager::ShowCurrentStates() {
 		msg += State->StateName + " ";
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Current States: %s"), *msg);
+}
+
+bool UStateManager::IsProne()
+{
+	return CurrentStates.Contains(ProneState);
 }

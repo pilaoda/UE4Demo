@@ -17,6 +17,5 @@ class QUICISTART_API UGunFireState : public UBaseState
 public:
 	// Sets default values for this component's properties
 	UGunFireState();
-	
-	
-};
+
+ };

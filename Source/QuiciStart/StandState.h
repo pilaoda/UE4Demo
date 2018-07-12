@@ -17,6 +17,5 @@ class QUICISTART_API UStandState : public UBaseState
 public:
 	// Sets default values for this component's properties
 	UStandState();
-	
-	
-};
+
+ };

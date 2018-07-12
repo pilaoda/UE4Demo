@@ -18,5 +18,7 @@ public:
 	// Sets default values for this component's properties
 	UJumpState();
 	
+	virtual void Enter() override;
+	virtual void Leave() override;
 	
 };

@@ -7,6 +7,7 @@
 #include "Containers/Map.h"
 #include "BaseState.h"
 #include "StandState.h"
+class AMyCharacter;
 #include "StateManager.generated.h"
 
 
@@ -18,6 +19,7 @@ class QUICISTART_API UStateManager : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	UStateManager();
+	UStateManager(AMyCharacter* Character);
 
 protected:
 	// Called when the game starts
@@ -30,18 +32,23 @@ public:
 	void AddState(StateEnum StateType);
 	void RemoveState(StateEnum StateType);
 	UBaseState* GetStateObject(StateEnum StateType);
+	void SetCharacter(AMyCharacter* Character);
 
 	void Move();
 	void StopMove();
 	void Stand();
 	void Crouch();
+	void StopCrouch();
 	void Prone();
+	void StopProne();
 	void Jump();
+	void StopJump();
 	void GunADS();
 	void GunFire();
 	void StopGunFire();
 
 	void ShowCurrentStates();
+	bool IsProne();
 
 	bool HasX(FString s);
 	bool HasY(FString s);
@@ -69,7 +76,7 @@ public:
 			{ "XY", "XY", "XY", "XY", "XY", "XY", "XY" },
 			{ "XY", "XY", "_Y", "_Y", "XY", "XY", "XY" },
 			{ "XY", "_Y", "X_", "_Y", "XY", "XY", "XY" },
-			{ "XY", "_Y", "_Y", "XY", "XY", "XY", "XY" },
+			{ "XY", "_Y", "_Y", "XY", "X_", "XY", "XY" },
 			{ "XY", "XY", "X_", "X_", "XY", "XY", "X_" },
 			{ "XY", "XY", "XY", "XY", "XY", "XY", "X_" },
 			{ "XY", "XY", "XY", "XY", "_Y", "XY", "XY" }

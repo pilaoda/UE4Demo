@@ -10,7 +10,7 @@
 
 #include "MyCharacter.generated.h"
 
-UCLASS()
+UCLASS(config=Game, BlueprintType)
 class QUICISTART_API AMyCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -39,12 +39,18 @@ public:
 	void GunADS();
 	void PressX();
 	void PressC();
+	void JumpStart();
+
+	void Prone();
+	void UnProne();
 
 	bool bTouchStart;
 	bool bMovingX;
 	bool bMovingY;
 	FVector TouchPoint;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Transient, Category = Character)
+		bool bIsProned;
 	UPROPERTY(EditAnywhere)
 		USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere)

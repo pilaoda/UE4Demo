@@ -303,7 +303,7 @@ bool UStateManager::IsProne()
 void UStateManager::GunReload()
 {
 	AddState(StateEnum::GUN_RELOAD);
-	GetWorld()->GetTimerManager().SetTimer(TimeHandel, this, &UStateManager::FinishGunReload, 1.0f, false);
+	GetWorld()->GetTimerManager().SetTimer(TimeHandel, this, &UStateManager::FinishGunReload, 2.0f, true);
 }
 
 void UStateManager::FinishGunReload()

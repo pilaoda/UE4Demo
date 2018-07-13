@@ -40,6 +40,7 @@ AMyCharacter::AMyCharacter()
 
 	bIsProned = false;
 	fAimPitch = 0.0f;
+	bIsGunReloading = false;
 }
 
 // Called when the game starts or when spawned
@@ -86,6 +87,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Sight", IE_Pressed, this, &AMyCharacter::GunADS);
 	PlayerInputComponent->BindAction("PressX", IE_Pressed, this, &AMyCharacter::PressX);
 	PlayerInputComponent->BindAction("PressC", IE_Pressed, this, &AMyCharacter::PressC);
+	PlayerInputComponent->BindAction("PressR", IE_Pressed, this, &AMyCharacter::PressR);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::JumpStart);
 }
@@ -195,4 +197,24 @@ void AMyCharacter::Prone()
 void AMyCharacter::UnProne()
 {
 	bIsProned = false;
+}
+
+void AMyCharacter::PressR()
+{
+	StateManager->GunReload();
+}
+
+void AMyCharacter::GunReload()
+{
+	bIsGunReloading = true;
+}
+
+void AMyCharacter::StopGunReload()
+{
+	bIsGunReloading = false;
+}
+
+void AMyCharacter::FinishGunReload()
+{
+	bIsGunReloading = false;
 }

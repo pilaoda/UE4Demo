@@ -39,16 +39,21 @@ public:
 	void GunADS();
 	void PressX();
 	void PressC();
+	void PressR();
 	void JumpStart();
-
 	void Prone();
 	void UnProne();
+	void GunReload();
+	void StopGunReload();
+	void FinishGunReload();
 
 	bool bTouchStart;
 	bool bMovingX;
 	bool bMovingY;
 	FVector TouchPoint;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Transient, Category = Character)
+		bool bIsGunReloading;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Transient, Category = Character)
 		bool bIsProned;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Transient, Category = Character)

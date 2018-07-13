@@ -46,9 +46,13 @@ public:
 	void GunADS();
 	void GunFire();
 	void StopGunFire();
+	void GunReload();
+	void FinishGunReload();
+	void StopGunReload();
 
 	void ShowCurrentStates();
 	bool IsProne();
+
 
 	bool HasX(FString s);
 	bool HasY(FString s);
@@ -70,16 +74,19 @@ public:
 		UBaseState* GunFireState;
 	UPROPERTY()
 		UBaseState* GunADSState;
+	UPROPERTY()
+		UBaseState* GunReloadState;
 
-	// 	MOVE, STAND, CROUCH, PRONE, JUMP, GUN_FIRE, GUN_ADS
-	const FString StateTable[7][7] = {
-			{ "XY", "XY", "XY", "XY", "XY", "XY", "XY" },
-			{ "XY", "XY", "_Y", "_Y", "XY", "XY", "XY" },
-			{ "XY", "_Y", "X_", "_Y", "XY", "XY", "XY" },
-			{ "XY", "_Y", "_Y", "XY", "X_", "XY", "XY" },
-			{ "XY", "XY", "X_", "X_", "XY", "XY", "X_" },
-			{ "XY", "XY", "XY", "XY", "XY", "XY", "X_" },
-			{ "XY", "XY", "XY", "XY", "_Y", "XY", "XY" }
+	// 	MOVE, STAND, CROUCH, PRONE, JUMP, GUN_FIRE, GUN_ADS, GUN_RELOAD
+	const FString StateTable[8][8] = {
+			{ "XY", "XY", "XY", "XY", "XY", "XY", "XY", "XY" },
+			{ "XY", "XY", "_Y", "_Y", "XY", "XY", "XY", "XY" },
+			{ "XY", "_Y", "X_", "_Y", "XY", "XY", "XY", "XY" },
+			{ "XY", "_Y", "_Y", "XY", "X_", "XY", "XY", "XY" },
+			{ "XY", "XY", "X_", "X_", "XY", "XY", "X_", "XY" },
+			{ "XY", "XY", "XY", "XY", "XY", "XY", "X_", "_Y" },
+			{ "XY", "XY", "XY", "XY", "_Y", "XY", "XY", "_Y" },
+			{ "XY", "XY", "XY", "XY", "XY", "_Y", "X_", "X_" }
 	};
 
 	TMap<StateEnum, TArray<TMap<FString, FString>>> Conditions;

@@ -8,8 +8,12 @@
 #include "JumpState.h"
 #include "GunFireState.h"
 #include "GunADSState.h"
+#include "GunReloadState.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 // Sets default values for this component's properties
 UStateManager::UStateManager()
@@ -33,6 +37,7 @@ UStateManager::UStateManager()
 	JumpState = NewObject<UJumpState>();
 	GunFireState = NewObject<UGunFireState>();
 	GunADSState = NewObject<UGunADSState>();
+	GunReloadState = NewObject<UGunReloadState>();
 
 	TArray<TMap<FString, FString>> ProneArray;
 
@@ -201,6 +206,10 @@ UBaseState* UStateManager::GetStateObject(StateEnum StateType)
 	{
 		return GunADSState;
 	}
+	else if (StateType == StateEnum::GUN_RELOAD)
+	{
+		return GunReloadState;
+	}
 	else
 	{
 		check(false);
@@ -288,4 +297,26 @@ void UStateManager::ShowCurrentStates() {
 bool UStateManager::IsProne()
 {
 	return CurrentStates.Contains(ProneState);
+}
+
+void UStateManager::GunReload()
+{
+	AddState(StateEnum::GUN_RELOAD);
+	FTimerHandle TimeHandel;
+	GetWorld()->GetTimerManager().SetTimer(TimeHandel, this, &UStateManager::FinishGunReload, 1.0f, true);
+	GetWorld()->GetTimerManager().ClearTimer(TimeHandel);
+}
+
+void UStateManager::FinishGunReload()
+{
+	if (CurrentStates.Contains(GunReloadState))
+	{
+		((UGunReloadState *)GunReloadState)->bFinish = true;
+		RemoveState(StateEnum::GUN_RELOAD);
+	}
+}
+
+void UStateManager::StopGunReload()
+{
+	RemoveState(StateEnum::GUN_RELOAD);
 }

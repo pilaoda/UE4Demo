@@ -16,7 +16,8 @@ enum class StateEnum : uint8
 	PRONE = 3,
 	JUMP = 4,
 	GUN_FIRE = 5,
-	GUN_ADS = 6
+	GUN_ADS = 6,
+	GUN_RELOAD = 7
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

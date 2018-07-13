@@ -127,6 +127,22 @@ UStandState::UStandState()
  - 特殊状态(伏地开镜状态下添加移动状态时，必须删除开镜状态) 成功地进行了处理。
 ![状态替换](StateReplace.png)
 
+## 5. 动画
+ - 使用市场上的免费资源Starter Animation pack中的模型及动画资源。
+ - 修改原本的动画蓝图类的事件图表来响应蹲跑跳。
+![事件图表](Animation.png)
+ - 设置动画状态机。Speed, Direction, Jumping, Crouching, Proning 等变量用来控制状态之间的转换。
+![动画状态机](AnimationStateMechain.png)
+ - Character自带Jump和Crouch的方法，同时有表示状态的bool值变量，可以直接在状态类用来控制状态机的转变。
+ - Character不包含Prone的方法，自己实现，通过控制bIsProned变量来控制Prone状态的转变。
+ - 注意在状态类中需要保持对Character的引用，而Character又包含StateManager，StateManager又包含各个状态类，如果简单包含头文件会引起循环引用的错误，因此需要在状态类的头文件中超前引用Character。之后再在cpp文件中#include Character的头文件。
+```
+class AMyCharacter;
+```
+
 ## 遗留问题
+ - 趴地是Capsule无法旋转，只能设置大小位置。
+ - 持枪瞄准方向动作。
+ - 开镜动作和其他动作的结合。
  - 伏地开镜移动后，在停止移动时无法恢复到开镜的状态。
  - 特殊状态表在c++下书写十分困难，在json或lua中情况会好转。

@@ -36,7 +36,7 @@ AMyCharacter::AMyCharacter()
 	StateManager = CreateDefaultSubobject<UStateManager>(TEXT("StateManager"));
 	StateManager->SetCharacter(this);
 
-	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -86.0f), FRotator(0.0f, 0.0f, -90.0f));
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -87.0f), FRotator(0.0f, -90.0f, 0.0f));
 
 	bIsProned = false;
 }
@@ -160,12 +160,10 @@ void AMyCharacter::PressC()
 {
 	if (bIsCrouched)
 	{
-		UnCrouch();
 		StateManager->StopCrouch();
 	}
 	else
 	{	
-		Crouch();
 		StateManager->Crouch();
 	}
 }
@@ -179,12 +177,10 @@ void AMyCharacter::PressX()
 {
 	if (StateManager->IsProne())
 	{
-		UnProne();
 		StateManager->StopProne();
 	}
 	else
 	{
-		Prone();
 		StateManager->Prone();
 	}
 }

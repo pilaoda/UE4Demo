@@ -36,9 +36,10 @@ AMyCharacter::AMyCharacter()
 	StateManager = CreateDefaultSubobject<UStateManager>(TEXT("StateManager"));
 	StateManager->SetCharacter(this);
 
-	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -86.0f), FRotator(0.0f, 0.0f, -90.0f));
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -87.0f), FRotator(0.0f, -90.0f, 0.0f));
 
 	bIsProned = false;
+	fAimPitch = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -134,6 +135,7 @@ void AMyCharacter::Touching(ETouchIndex::Type FingerIndex, FVector Location)
 	{
 		AddControllerYawInput((Location.X - TouchPoint.X) * 0.3);
 		SpringArm->AddRelativeRotation(FRotator(-(Location.Y - TouchPoint.Y) * 0.3, 0.0f, 0.0f));
+		fAimPitch = SpringArm->RelativeRotation.Pitch;
 	}
 	else {
 		bTouchStart = false;

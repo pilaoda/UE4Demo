@@ -220,7 +220,6 @@ void UStateManager::SetCharacter(AMyCharacter * Character)
 	GunADSState->SetCharacter(Character);
 }
 
-
 void UStateManager::Move() {
 	AddState(StateEnum::MOVE);
 }
@@ -272,7 +271,6 @@ void UStateManager::GunADS() {
 void UStateManager::GunFire() {
 	AddState(StateEnum::GUN_FIRE);
 }
-
 
 void UStateManager::StopGunFire() {
 	RemoveState(StateEnum::GUN_FIRE);

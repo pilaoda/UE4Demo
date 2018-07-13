@@ -51,8 +51,6 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Transient, Category = Character)
 		bool bIsProned;
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Transient, Category = Character)
-		float fAimPitch;
 	UPROPERTY(EditAnywhere)
 		USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere)
